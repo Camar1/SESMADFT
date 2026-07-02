@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SES Platform</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand-lockup">
+        <img class="brand-logo" src="/assets/brand/ses-platform-logo-white.png" alt="SES Platform logo" decoding="async">
+        <div>
+          <p class="eyebrow">MAD Formula Team engineering dashboard</p>
+          <h1>SES Platform</h1>
+        </div>
+      </div>
+      <nav class="tabs" aria-label="Main modules">
+        <button class="tab is-active" data-tab="pre">Pre-calculation</button>
+        <button class="tab" data-tab="post">Post-processing</button>
+        <button class="tab" data-tab="database">Database</button>
+        <button class="tab" data-tab="monocoque">Monocoque Weight</button>
+      </nav>
+      <div id="auth-controls" class="auth-controls" aria-live="polite"></div>
+    </header>
+
+    <main>
+      <section id="pre" class="module is-active"></section>
+      <section id="post" class="module"></section>
+      <section id="database" class="module"></section>
+      <section id="monocoque" class="module"></section>
+    </main>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="/config.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
