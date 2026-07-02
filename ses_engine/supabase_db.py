@@ -4,11 +4,29 @@ import json
 import os
 from typing import Any
 from urllib.error import HTTPError
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 from .calculations import CORE_MATERIALS, DEFAULT_MATERIALS, Material, safe_json
 from .db import DEFAULT_CAR_PANELS, Database, utc_now
+
+
+def normalize_supabase_url(url: str) -> str:
+    """Return the project base URL, not a dashboard/rest/auth sub-path."""
+    raw = str(url or "").strip().rstrip("/")
+    if not raw:
+        return raw
+    parts = urlsplit(raw)
+    path = parts.path.rstrip("/")
+    for suffix in ("/rest/v1", "/auth/v1", "/storage/v1"):
+        if path.endswith(suffix):
+            path = path[: -len(suffix)]
+            break
+    if parts.netloc == "supabase.com" and "/dashboard/project/" in path:
+        project_ref = path.split("/dashboard/project/", 1)[1].split("/", 1)[0]
+        if project_ref:
+            return f"https://{project_ref}.supabase.co"
+    return urlunsplit((parts.scheme, parts.netloc, path, "", "")).rstrip("/")
 
 
 class SupabaseDatabase(Database):
@@ -19,7 +37,7 @@ class SupabaseDatabase(Database):
     """
 
     def __init__(self, url: str, service_role_key: str):
-        self.url = url.rstrip("/")
+        self.url = normalize_supabase_url(url)
         self.rest_url = f"{self.url}/rest/v1"
         self.service_role_key = service_role_key
         self._seed_defaults()

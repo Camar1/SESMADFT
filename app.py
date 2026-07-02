@@ -30,7 +30,7 @@ from ses_engine.calculations import (
     safe_json,
 )
 from ses_engine.db import Database
-from ses_engine.supabase_db import SupabaseDatabase, should_use_supabase
+from ses_engine.supabase_db import SupabaseDatabase, normalize_supabase_url, should_use_supabase
 from ses_engine.excel_io import export_specimen_workbook, parse_workbook_bytes
 
 
@@ -52,7 +52,7 @@ DB = create_database()
 
 
 EDIT_AUTH_MODE = os.environ.get("EDIT_AUTH_MODE", "public").lower()
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
+SUPABASE_URL = normalize_supabase_url(os.environ.get("SUPABASE_URL", ""))
 SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY") or os.environ.get("VITE_SUPABASE_ANON_KEY") or ""
 ALLOWED_ORIGINS = [origin.strip() for origin in os.environ.get("ALLOWED_ORIGINS", "*").split(",") if origin.strip()]
 
